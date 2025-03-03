@@ -1,0 +1,26 @@
+variables:
+  CC: "gcc"
+  LD: "gcc"
+  CFLAGS: "-c -Wall"
+  LDFLAGS: "-Wall"
+
+targets:
+  all:
+    deps: [example.bin]
+
+  example.bin:
+    deps: [main.o, waiter.o]
+    cmds:
+      - "${LD} ${LDFLAGS} -o ${@} ${^} -lc"
+
+  main.o:
+    cmds:
+      - "${CC} ${CFLAGS} src/main.c -o ${@}"
+
+  waiter.o:
+    cmds:
+      - "${CC} ${CFLAGS} src/waiter.c -o ${@}"
+
+  clean:
+    cmds:
+      - "rm -rf *.o example.bin"

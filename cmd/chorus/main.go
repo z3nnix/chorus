@@ -191,17 +191,15 @@ func handleInternalCommand(cmd string) {
 
 	var err error
 	switch {
-	case strings.HasPrefix(command, "update_nvm"):
+	case strings.HasPrefix(command, "load_nvm"):
 		args := strings.Fields(command)
 		if len(args) < 2 {
 			err = fmt.Errorf("app file path required")
 		} else {
-			err = updateNVMHeader(args[1])
+			err = loadNVMHeader(args[1])
 		}
-	
 	case strings.HasPrefix(command, "restore_nvm"):
 		err = restoreNVMHeader()
-	
 	default:
 		err = fmt.Errorf("unknown internal command")
 	}
@@ -222,52 +220,52 @@ func handleInternalCommand(cmd string) {
 	)
 }
 
-func updateNVMHeader(appFile string) error {
-    headerFile := "core/kernel/nvm/nvm.h"
+func loadNVMHeader(appFile string) error {
+	headerFile := "core/kernel/nvm/nvm.h"
 
-    appContent, err := os.ReadFile(appFile)
-    if err != nil {
-        return fmt.Errorf("failed to read app file: %v", err)
-    }
+	appContent, err := os.ReadFile(appFile)
+	if err != nil {
+		return fmt.Errorf("failed to read app file: %v", err)
+	}
 
-    lines := strings.Split(strings.TrimSpace(string(appContent)), "\n")
-    var processedLines []string
+	lines := strings.Split(strings.TrimSpace(string(appContent)), "\n")
+	var processedLines []string
     
-    for _, line := range lines {
-        trimmed := strings.TrimSpace(line)
-        if trimmed == "" {
-            continue
-        }
+	for _, line := range lines {
+		trimmed := strings.TrimSpace(line)
+		if trimmed == "" {
+			continue
+		}
         
-        escaped := strings.ReplaceAll(trimmed, `"`, `\"`)
-        processedLines = append(processedLines, `"`+escaped+` \n"`)
-    }
+		escaped := strings.ReplaceAll(trimmed, `"`, `\"`)
+		processedLines = append(processedLines, `"`+escaped+` \n"`)
+	}
 
-    result := strings.Join(processedLines, " ")
-    if len(result) > 4 {
-        result = result[:len(result)-4] + `"`
-    }
+	result := strings.Join(processedLines, " ")
+	if len(result) > 4 {
+		result = result[:len(result)-4] + `"`
+	}
 
-    if err := copyFile(headerFile, headerFile+".bak"); err != nil {
-        return fmt.Errorf("backup failed: %v", err)
-    }
+	if err := copyFile(headerFile, headerFile+".bak"); err != nil {
+		return fmt.Errorf("backup failed: %v", err)
+	}
 
-    headerContent, err := os.ReadFile(headerFile)
-    if err != nil {
-        return fmt.Errorf("failed to read header file: %v", err)
-    }
+	headerContent, err := os.ReadFile(headerFile)
+	if err != nil {
+		return fmt.Errorf("failed to read header file: %v", err)
+	}
 
-    pattern := regexp.MustCompile(`static const char apps\[\] = ".*";`)
-    newContent := pattern.ReplaceAllString(
-        string(headerContent),
-        fmt.Sprintf(`static const char apps[] = %s;`, result),
-    )
+	pattern := regexp.MustCompile(`static const char apps\[\] = ".*";`)
+	newContent := pattern.ReplaceAllString(
+		string(headerContent),
+		fmt.Sprintf(`static const char apps[] = %s;`, result),
+	)
 
-    if err := os.WriteFile(headerFile, []byte(newContent), 0644); err != nil {
-        return fmt.Errorf("failed to write header file: %v", err)
-    }
+	if err := os.WriteFile(headerFile, []byte(newContent), 0644); err != nil {
+		return fmt.Errorf("failed to write header file: %v", err)
+	}
 
-    return nil
+	return nil
 }
 
 func restoreNVMHeader() error {
