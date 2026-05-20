@@ -6,6 +6,7 @@ import (
 	"os"
 	"os/exec"
 	"os/signal"
+	"path/filepath"
 	"strings"
 	"syscall"
 	"time"
@@ -67,6 +68,9 @@ func loadConfig() *BuildConfig {
 		exitWithError("parse config:", err)
 	}
 
+	if config.Variables == nil {
+		config.Variables = make(map[string]string)
+	}
 	config.Variables["DATE"] = time.Now().Format("2006-01-02")
 	return config
 }
@@ -135,9 +139,11 @@ func executeCommands(config *BuildConfig, cmds []string, target string) {
 
 func expandVariables(config *BuildConfig, cmd string, target string) string {
 	replacements := map[string]string{
-		"@": target,
-		"<": firstDependency(config, target),
-		"^": strings.Join(config.Targets[target].Deps, " "),
+		"@":  target,
+		"@F": filepath.Base(target),
+		"@D": filepath.Dir(target),
+		"<":  firstDependency(config, target),
+		"^":  strings.Join(config.Targets[target].Deps, " "),
 	}
 
 	for k, v := range config.Variables {
