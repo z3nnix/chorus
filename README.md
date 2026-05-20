@@ -4,7 +4,7 @@
 # Setup
 Unix-like systems(Linux-based, BSD-like, macos maybe.. and etc.) only
 ```sh
-wget https://github.com/z3nnix/chorus/releases/download/1.0.2/chorus.zip && unzip chorus.zip && rm chorus.zip && sudo mv chorus.bin /usr/bin/chorus && sudo chmod +x /usr/bin/chorus && rm -rf chorus
+curl https://raw.githubusercontent.com/z3nnix/chorus/refs/heads/main/install.sh | sh
 ```
 
 # Project, that used Chorus
