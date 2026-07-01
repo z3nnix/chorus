@@ -9,6 +9,7 @@ Welcome to the comprehensive documentation for **Chorus**, a minimalistic build 
 - [Build File Syntax](syntax.md) - Detailed syntax guide for writing build files
 - [CLI Reference](cli.md) - Command-line interface documentation
 - [Advanced Usage](advanced.md) - Advanced patterns and best practices
+- [Building as a Shared Library](library.md) - Embedding Chorus via a C-shared library
 - [FAQ](faq.md) - Frequently asked questions
 
 ## What is Chorus?
@@ -50,12 +51,6 @@ targets:
 
 - [NovariaOS](https://github.com/novariaos) - An operating system project
 - [Perano lang](https://github.com/noxzion/perano-lang) - A programming language
-
-## Community and Support
-
-- **GitHub**: [z3nnix/chorus](https://github.com/z3nnix/chorus)
-- **Issues**: Report bugs or request features on GitHub Issues
-- **License**: Check the LICENSE file in the repository
 
 ## Contributing
 

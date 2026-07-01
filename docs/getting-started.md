@@ -33,6 +33,9 @@ go build -o chorus ./cmd/chorus
 sudo mv chorus /usr/bin/chorus
 ```
 
+Chorus can also be compiled as a C-shared library instead of (or alongside)
+the CLI. See [Building as a Shared Library](library.md).
+
 ## Your First Build
 
 Let's create a simple C project to demonstrate Chorus.
